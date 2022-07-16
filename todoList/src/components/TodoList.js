@@ -1,20 +1,32 @@
-import {pubSub} from '../PubSub'
+import {pubSub} from '../PubSub';
 export default class TodoList extends HTMLElement {
     constructor(){
         super()
         this.attachShadow({mode:'open'})
         this.itemsContent = []
         this.addTodoItem = this.addTodoItem.bind(this)
+        this.removeTodoItem = this.removeTodoItem.bind(this)
         pubSub.subscribe('todo_item_added',this.addTodoItem)
     }
 
-    addTodoItem(content){
-        this.itemsContent.push(content)
+    removeTodoItem(key){
+        this.itemsContent = this.itemsContent.filter((item)=>item.key!==key)
+        this.render()
+    }
+
+    addTodoItem(item){
+        this.itemsContent.push(item)
+        this.render()
+    }
+
+    render(){
         this.ul.innerHTML=""
-        this.itemsContent.forEach(content=>{
-            const item = document.createElement('li')
-            item.innerText = content;
-            this.ul.appendChild(item);
+        this.itemsContent.forEach(item=>{
+            const {content,key} = item
+            const newItem = document.createElement('li')
+            newItem.addEventListener('dblclick',()=>this.removeTodoItem(key))
+            newItem.innerText = content
+            this.ul.appendChild(newItem)
         })
     }
 
@@ -37,10 +49,13 @@ export default class TodoList extends HTMLElement {
                     font-size:1.2rem;
                     color: var(--text-primary-color);
                 }
+                ul li{
+                    width:100%;
+                    cursor:pointer;
+                }
             </style>
         `
         this.ul = this.shadowRoot.querySelector('ul');
     }
-    
 }
 

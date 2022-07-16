@@ -5,16 +5,28 @@ export default class LearningList extends HTMLElement {
         this.attachShadow({mode:'open'})
         this.itemsContent = []
         this.addLearningItem = this.addLearningItem.bind(this)
+        this.removeLearningItem = this.removeLearningItem.bind(this)
         pubSub.subscribe('learning_item_added',this.addLearningItem)
     }
 
-    addLearningItem(content){
-        this.itemsContent.push(content)
+    removeLearningItem(key){
+        this.itemsContent = this.itemsContent.filter((item)=>item.key!==key)
+        this.render()
+    }
+
+    addLearningItem(item){
+        this.itemsContent.push(item)
+        this.render()
+    }
+
+    render(){
         this.ul.innerHTML=""
-        this.itemsContent.forEach(content=>{
-            const item = document.createElement('li')
-            item.innerText = content;
-            this.ul.appendChild(item);
+        this.itemsContent.forEach(item=>{
+            const {content,key} = item
+            const newItem = document.createElement('li')
+            newItem.addEventListener('dblclick',()=>this.removeLearningItem(key))
+            newItem.innerText = content
+            this.ul.appendChild(newItem)
         })
     }
 
@@ -36,6 +48,10 @@ export default class LearningList extends HTMLElement {
                     padding-Left:0;
                     font-size:1.2rem;
                     color: var(--text-primary-color);
+                }
+                ul li{
+                    width:100%;
+                    cursor:pointer;
                 }
             </style>
         `

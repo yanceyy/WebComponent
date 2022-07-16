@@ -1,4 +1,5 @@
 import {pubSub} from '../PubSub'
+import { v4 as uuidv4 } from 'uuid';
 
 export default class ManageForm extends HTMLElement {
     constructor(){
@@ -8,6 +9,10 @@ export default class ManageForm extends HTMLElement {
         this.addTodoItems = this.addTodoItems.bind(this)
     }
 
+    createItem(content){
+        return {key:uuidv4(),content}
+    }
+
     addLearningItems(e){
         const inputValue = this.addLearningInput.value
         const inputForm = e.target.closest('form')
@@ -15,7 +20,7 @@ export default class ManageForm extends HTMLElement {
         if(chk_status){
             this.addLearningInput.value=""
             e.preventDefault() // prevent the pop up blank notification after add element
-            pubSub.publish('learning_item_added',inputValue)
+            pubSub.publish('learning_item_added',this.createItem(inputValue))
         }
     }
 
@@ -26,7 +31,7 @@ export default class ManageForm extends HTMLElement {
         if(chk_status){
             this.toDoInput.value=""
             e.preventDefault() // prevent the pop up blank notification after add element
-            pubSub.publish('todo_item_added',inputValue)
+            pubSub.publish('todo_item_added',this.createItem(inputValue))
         }
     }
 
