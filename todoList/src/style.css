@@ -3,9 +3,20 @@
 :root {
   --border-width: 5px;
   --border-radius: 1rem;
+  --text-primary-color:#555;
 }
 
-body {
+#app {
   padding: 2rem;
   font-family: 'Edu TAS Beginner', cursive;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr;
+  gap: 1rem;
+  align-items: stretch;
+  min-height: 50vh;
 }
+
+my-status{
+  margin-top:1rem;
+}
+
