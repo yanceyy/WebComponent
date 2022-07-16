@@ -11,6 +11,7 @@ export default class TodoList extends HTMLElement {
 
     removeTodoItem(key){
         this.itemsContent = this.itemsContent.filter((item)=>item.key!==key)
+        pubSub.publish('todo_item_removed')
         this.render()
     }
 

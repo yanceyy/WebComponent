@@ -11,11 +11,13 @@ export default class LearningList extends HTMLElement {
 
     removeLearningItem(key){
         this.itemsContent = this.itemsContent.filter((item)=>item.key!==key)
+        pubSub.publish('learning_item_removed')
         this.render()
     }
 
     addLearningItem(item){
         this.itemsContent.push(item)
+
         this.render()
     }
 
