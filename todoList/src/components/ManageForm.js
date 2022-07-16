@@ -38,11 +38,13 @@ export default class ManageForm extends HTMLElement {
     connectedCallback(){
         this.shadowRoot.innerHTML=`
             <form className='learning-form'>
-                <input required type='text' class="learning-input" type="text" name="learning" placeholder="Please add a learning item">
+                <label for='learningInput' > Add learning items </label>
+                <input id='learningInput' required type='text' class="learning-input" type="text" name="learning" placeholder="Please add a learning item">
                 <button class="learning">Add</button>
             </form>
             <form className='todo-form'>
-                <input required type='text' class="todo-input"  type="text" name="todo" placeholder="Please add a todo item">
+                <label for='todoInput' > Add todo items </label>
+                <input id='todoInput' required type='text' class="todo-input"  type="text" name="todo" placeholder="Please add a todo item">
                 <button class="todo">Add</button>
             </form>
             <style>
@@ -68,6 +70,19 @@ export default class ManageForm extends HTMLElement {
                     padding: .5rem 2rem;
                     font-size: 1.2rem;
                 }
+
+                label{
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border-width: 0;
+                }
+
                 button:hover{
                     cursor:pointer;
                 }
