@@ -1,8 +1,21 @@
+import {pubSub} from '../PubSub'
 export default class LearningList extends HTMLElement {
     constructor(){
         super()
         this.attachShadow({mode:'open'})
-        this.item = []
+        this.itemsContent = []
+        this.addLearningItem = this.addLearningItem.bind(this)
+        pubSub.subscribe('learning_item_added',this.addLearningItem)
+    }
+
+    addLearningItem(content){
+        this.itemsContent.push(content)
+        this.ul.innerHTML=""
+        this.itemsContent.forEach(content=>{
+            const item = document.createElement('li')
+            item.innerText = content;
+            this.ul.appendChild(item);
+        })
     }
 
     connectedCallback(){
@@ -26,6 +39,7 @@ export default class LearningList extends HTMLElement {
                 }
             </style>
         `
+        this.ul = this.shadowRoot.querySelector('ul');
     }
 }
 

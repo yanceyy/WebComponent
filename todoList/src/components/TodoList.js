@@ -1,8 +1,21 @@
+import {pubSub} from '../PubSub'
 export default class TodoList extends HTMLElement {
     constructor(){
         super()
         this.attachShadow({mode:'open'})
-        this.item = []
+        this.itemsContent = []
+        this.addTodoItem = this.addTodoItem.bind(this)
+        pubSub.subscribe('todo_item_added',this.addTodoItem)
+    }
+
+    addTodoItem(content){
+        this.itemsContent.push(content)
+        this.ul.innerHTML=""
+        this.itemsContent.forEach(content=>{
+            const item = document.createElement('li')
+            item.innerText = content;
+            this.ul.appendChild(item);
+        })
     }
 
     connectedCallback(){
@@ -26,6 +39,8 @@ export default class TodoList extends HTMLElement {
                 }
             </style>
         `
+        this.ul = this.shadowRoot.querySelector('ul');
     }
+    
 }
 

@@ -1,19 +1,45 @@
+import {pubSub} from '../PubSub'
+
 export default class ManageForm extends HTMLElement {
     constructor(){
         super()
         this.attachShadow({mode:'open'})
+        this.addLearningItems = this.addLearningItems.bind(this)
+        this.addTodoItems = this.addTodoItems.bind(this)
+    }
+
+    addLearningItems(e){
+        const inputValue = this.addLearningInput.value
+        const inputForm = e.target.closest('form')
+        const chk_status = inputForm.checkValidity();
+        if(chk_status){
+            this.addLearningInput.value=""
+            e.preventDefault() // prevent the pop up blank notification after add element
+            pubSub.publish('learning_item_added',inputValue)
+        }
+    }
+
+    addTodoItems(e){
+        const inputValue = this.toDoInput.value
+        const inputForm = e.target.closest('form')
+        const chk_status = inputForm.checkValidity();
+        if(chk_status){
+            this.toDoInput.value=""
+            e.preventDefault() // prevent the pop up blank notification after add element
+            pubSub.publish('todo_item_added',inputValue)
+        }
     }
 
     connectedCallback(){
         this.shadowRoot.innerHTML=`
-            <div>
-                <input type="text" name="learning" placeholder="Please add a learning item">
+            <form className='learning-form'>
+                <input required type='text' class="learning-input" type="text" name="learning" placeholder="Please add a learning item">
                 <button class="learning">Add</button>
-            </div>
-            <div>
-                <input type="text" name="todo" placeholder="Please add a todo item">
+            </form>
+            <form className='todo-form'>
+                <input required type='text' class="todo-input"  type="text" name="todo" placeholder="Please add a todo item">
                 <button class="todo">Add</button>
-            </div>
+            </form>
             <style>
                 :host {
                     display:flex;
@@ -23,7 +49,7 @@ export default class ManageForm extends HTMLElement {
                     gap: 1rem;
                 }
 
-                div {
+                form {
                     width:100%;
                     display:grid;
                     grid-template-columns: 3fr 1.5fr;
@@ -41,7 +67,7 @@ export default class ManageForm extends HTMLElement {
                     cursor:pointer;
                 }
 
-                div + div button {
+                form + form button {
                     background: DarkSeaGreen;
                 }
 
@@ -53,6 +79,13 @@ export default class ManageForm extends HTMLElement {
                 }
             </style>
         `
+
+        this.addLearningButton = this.shadowRoot.querySelector('.learning')
+        this.addTodoButton = this.shadowRoot.querySelector('.todo')
+        this.addLearningButton.addEventListener('click', this.addLearningItems)
+        this.addTodoButton.addEventListener('click', this.addTodoItems)
+        this.addLearningInput = this.shadowRoot.querySelector('.learning-input')
+        this.toDoInput = this.shadowRoot.querySelector('.todo-input')
     }
 }
 

@@ -1,5 +1,4 @@
 export class PubSub{
-
     static instance = null;
     constructor(){
         this.events={}
@@ -28,3 +27,5 @@ export class PubSub{
         if(this.events[eventName]) this.events[eventName].forEach(f=>f(data))
     }
 }
+
+export const pubSub = PubSub.createInstance();
